@@ -20,6 +20,7 @@ class IDELikeInterface extends StatefulWidget {
   const IDELikeInterface({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _IDELikeInterfaceState createState() => _IDELikeInterfaceState();
 }
 
@@ -142,7 +143,7 @@ void loop() {
           'AXIOMETA',
           style: TextStyle(color: Colors.white, fontFamily: 'Pirulen'),
         ),
-        backgroundColor: const Color.fromARGB(255, 7, 64, 31),
+        backgroundColor: const Color.fromARGB(255, 40, 89, 63),
         actions: [
           if (!isProgrammingMode)
             IconButton(
@@ -212,7 +213,7 @@ void loop() {
                                       !isDeleteMode &&
                                       !isProgrammingMode
                                   ? Colors.blue
-                                  : Colors.grey[200],
+                                  : const Color.fromARGB(255, 179, 182, 181),
                               child: Text(component.name),
                             ),
                           ),
