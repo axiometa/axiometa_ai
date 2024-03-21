@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: IDELikeInterface(),
       debugShowCheckedModeBanner: false,
     );
@@ -15,6 +17,8 @@ class MyApp extends StatelessWidget {
 }
 
 class IDELikeInterface extends StatefulWidget {
+  const IDELikeInterface({super.key});
+
   @override
   _IDELikeInterfaceState createState() => _IDELikeInterfaceState();
 }
@@ -66,15 +70,15 @@ class _IDELikeInterfaceState extends State<IDELikeInterface> {
           title: Text("Program ${component.name}"),
           content: TextField(
             controller: customController,
-            decoration: InputDecoration(hintText: "Enter your action"),
+            decoration: const InputDecoration(hintText: "Enter your action"),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: Text("Generate"),
+              child: const Text("Generate"),
               onPressed: () {
                 // For simplicity, directly set the generated code. In a real app, you might analyze the input.
                 generateCodeForArduino(customController.text);
@@ -134,11 +138,11 @@ void loop() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'AXIOMETA IDE',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color.fromARGB(255, 7, 64, 31),
+        backgroundColor: const Color.fromARGB(255, 7, 64, 31),
         actions: [
           if (!isProgrammingMode)
             IconButton(
@@ -174,7 +178,7 @@ void loop() {
               color: Colors.grey[200],
               child: SingleChildScrollView(
                 child: Text(generatedCode,
-                    style: TextStyle(fontFamily: 'Monospace', fontSize: 16)),
+                    style: const TextStyle(fontFamily: 'Monospace', fontSize: 16)),
               ),
             ),
           ),
@@ -194,10 +198,16 @@ void loop() {
                         top: component.position.dy,
                         child: Draggable<ComponentData>(
                           data: component,
+                          feedback: Material(
+                            elevation: 4.0,
+                            child: Text(component.name),
+                          ),
+                          onDragEnd: (details) =>
+                              onComponentDropped(component, details.offset),
                           child: GestureDetector(
                             onTap: () => onComponentTap(component),
                             child: Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               color: selectedComponent == component &&
                                       !isDeleteMode &&
                                       !isProgrammingMode
@@ -206,12 +216,6 @@ void loop() {
                               child: Text(component.name),
                             ),
                           ),
-                          feedback: Material(
-                            child: Text(component.name),
-                            elevation: 4.0,
-                          ),
-                          onDragEnd: (details) =>
-                              onComponentDropped(component, details.offset),
                         ),
                       );
                     }).toList(),
@@ -226,7 +230,7 @@ void loop() {
               color: Colors.grey[100],
               child: ComponentLibrary(
                   onComponentSelected: (componentName, position) =>
-                      addComponentToWorkspace(componentName, Offset(100, 100))),
+                      addComponentToWorkspace(componentName, const Offset(100, 100))),
             ),
           ),
         ],
@@ -268,7 +272,7 @@ class ConnectionPainter extends CustomPainter {
 class ComponentLibrary extends StatelessWidget {
   final Function(String, Offset) onComponentSelected;
 
-  ComponentLibrary({required this.onComponentSelected});
+  ComponentLibrary({super.key, required this.onComponentSelected});
 
   final List<String> components = [
     'Arduino Nano',
@@ -284,7 +288,7 @@ class ComponentLibrary extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(components[index]),
-          onTap: () => onComponentSelected(components[index], Offset(100, 100)),
+          onTap: () => onComponentSelected(components[index], const Offset(100, 100)),
         );
       },
     );
