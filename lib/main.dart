@@ -139,8 +139,8 @@ void loop() {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'AXIOMETA IDE',
-          style: TextStyle(color: Colors.white),
+          'AXIOMETA',
+          style: TextStyle(color: Colors.white, fontFamily: 'Pirulen'),
         ),
         backgroundColor: const Color.fromARGB(255, 7, 64, 31),
         actions: [
