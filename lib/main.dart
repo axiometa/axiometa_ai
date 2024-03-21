@@ -35,6 +35,7 @@ class _IDELikeInterfaceState extends State<IDELikeInterface> {
   }
 
   void onComponentTap(ComponentData component) {
+    //new comment
     if (isProgrammingMode) {
       // Trigger programming dialog only in Programming Mode
       if (component.name == "Arduino Nano") {
