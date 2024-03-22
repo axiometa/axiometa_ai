@@ -89,7 +89,7 @@ class IDELikeInterfaceState extends State<IDELikeInterface> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Simulating upload to Arduino...'),
+                Text('Uploading to Arduino Nano (COM3)'),
                 SizedBox(height: 20),
                 LinearProgressIndicator(),
               ],
