@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import services for clipboard access
+import 'dart:async'; // For timer functions
+
 import '/components/component_library.dart';
 import '/connections/connection_painter.dart';
 import '/components/component_data.dart';
-import '/programming/programming.dart'; // Make sure this file exists with the provided logic
+import '/programming/programming.dart';
 
 class IDELikeInterface extends StatefulWidget {
   const IDELikeInterface({super.key});
@@ -65,6 +68,42 @@ class IDELikeInterfaceState extends State<IDELikeInterface> {
     });
   }
 
+  void copyToClipboard() {
+    Clipboard.setData(ClipboardData(text: generatedCode)).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Code copied to clipboard!')),
+      );
+    });
+  }
+
+  void showUploadDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User must tap button for close dialog!
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 3), () {
+          Navigator.of(context).pop(true);
+        });
+        return AlertDialog(
+          title: Text('Uploading'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Simulating upload to Arduino...'),
+                SizedBox(height: 20),
+                LinearProgressIndicator(),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((val) {
+      if (val) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload complete!')));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,8 +137,27 @@ class IDELikeInterfaceState extends State<IDELikeInterface> {
             flex: 1,
             child: Container(
               color: Colors.grey[200],
-              child: SingleChildScrollView(
-                child: Text(generatedCode, style: const TextStyle(fontFamily: 'Monospace', fontSize: 16)),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Text(generatedCode, style: const TextStyle(fontFamily: 'Monospace', fontSize: 16)),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      showUploadDialog(); // Simulate upload functionality
+                    },
+                    child: const Text('Upload'),
+                    style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
+                  ),
+                  SizedBox(height: 10), // Adjusted spacing to 10px
+                  ElevatedButton(
+                    onPressed: copyToClipboard, // Implement copy to clipboard functionality
+                    child: const Text('Copy to Clipboard'),
+                    style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
+                  ),
+                ],
               ),
             ),
           ),
