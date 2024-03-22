@@ -38,7 +38,7 @@ class _IDELikeInterfaceState extends State<IDELikeInterface> {
         ComponentData(
           name: componentName,
           position: position,
-          imagePath: 'lib/assets/images/$componentName.png', // Example path
+          imagePath: 'assets/images/sensor_icons/$componentName.png', // Example path
         ),
       );
     });
