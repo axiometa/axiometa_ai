@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class ComponentLibrary extends StatelessWidget {
   final Function(String, Offset) onComponentSelected;
 
