@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '/component_library.dart';
-import '/connection_painter.dart';
-import '/component_data.dart';
+import 'components/component_library.dart';
+import 'connections/connection_painter.dart';
+import 'components/component_data.dart';
 
 
 

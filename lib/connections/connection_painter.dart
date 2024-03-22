@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/component_data.dart';
+import '../components/component_data.dart';
 
 class ConnectionPainter extends CustomPainter {
   final List<ComponentData> components;
