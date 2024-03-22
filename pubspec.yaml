@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
+  flutter_test:
+    sdk: flutter
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
