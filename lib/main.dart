@@ -148,7 +148,7 @@ void loop() {
           'AXIOMETA',
           style: TextStyle(color: Colors.white, fontFamily: 'Pirulen'),
         ),
-        backgroundColor: const Color.fromARGB(255, 40, 89, 63),
+        backgroundColor: Color.fromARGB(255, 5, 19, 12),
         actions: [
           if (!isProgrammingMode)
             IconButton(
