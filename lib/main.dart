@@ -32,10 +32,15 @@ class _IDELikeInterfaceState extends State<IDELikeInterface> {
   bool isProgrammingMode = false; // Flag for Programming Mode
   String generatedCode = '// Your code will appear here';
 
-  void addComponentToWorkspace(String componentName, Offset position) {
+  addComponentToWorkspace(String componentName, Offset position) {
     setState(() {
-      componentsInWorkspace
-          .add(ComponentData(name: componentName, position: position));
+      componentsInWorkspace.add(
+        ComponentData(
+          name: componentName,
+          position: position,
+          imagePath: 'lib/assets/images/$componentName.png', // Example path
+        ),
+      );
     });
   }
 
@@ -147,27 +152,26 @@ void loop() {
         actions: [
           if (!isProgrammingMode)
             IconButton(
-               //message comment
+              //message comment
               icon: Icon(isDeleteMode ? Icons.edit : Icons.delete),
               onPressed: () => setState(() => isDeleteMode = !isDeleteMode),
               tooltip: isDeleteMode
                   ? 'Switch to Edit Mode'
                   : 'Switch to Delete Mode',
-                  color: Colors.white,
+              color: Colors.white,
             ),
           IconButton(
             icon: Icon(isProgrammingMode ? Icons.code_off : Icons.code),
             onPressed: () => setState(() {
               isProgrammingMode = !isProgrammingMode;
               if (isProgrammingMode) {
-                isDeleteMode =
-                    false;
+                isDeleteMode = false;
               }
             }),
             tooltip: isProgrammingMode
                 ? 'Exit Programming Mode'
                 : 'Enter Programming Mode',
-                color: Colors.white,
+            color: Colors.white,
           ),
         ],
       ),
@@ -179,7 +183,8 @@ void loop() {
               color: Colors.grey[200],
               child: SingleChildScrollView(
                 child: Text(generatedCode,
-                    style: const TextStyle(fontFamily: 'Monospace', fontSize: 16)),
+                    style:
+                        const TextStyle(fontFamily: 'Monospace', fontSize: 16)),
               ),
             ),
           ),
@@ -201,21 +206,15 @@ void loop() {
                           data: component,
                           feedback: Material(
                             elevation: 4.0,
-                            child: Text(component.name),
+                            child: Image.asset(component.imagePath,
+                                width: 150, height: 150), // Adjust size as needed
                           ),
                           onDragEnd: (details) =>
                               onComponentDropped(component, details.offset),
                           child: GestureDetector(
                             onTap: () => onComponentTap(component),
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              color: selectedComponent == component &&
-                                      !isDeleteMode &&
-                                      !isProgrammingMode
-                                  ? Colors.blue
-                                  : const Color.fromARGB(255, 179, 182, 181),
-                              child: Text(component.name),
-                            ),
+                            child: Image.asset(component.imagePath,
+                                width: 120, height: 120), // Adjust size as needed
                           ),
                         ),
                       );
@@ -231,7 +230,8 @@ void loop() {
               color: Colors.grey[100],
               child: ComponentLibrary(
                   onComponentSelected: (componentName, position) =>
-                      addComponentToWorkspace(componentName, const Offset(100, 100))),
+                      addComponentToWorkspace(
+                          componentName, const Offset(100, 100))),
             ),
           ),
         ],
@@ -244,8 +244,13 @@ class ComponentData {
   String name;
   Offset position;
   List<ComponentData> connections = [];
+  String imagePath; // New field for the image path
 
-  ComponentData({required this.name, required this.position});
+  ComponentData({
+    required this.name,
+    required this.position,
+    required this.imagePath, // Initialize in the constructor
+  });
 }
 
 class ConnectionPainter extends CustomPainter {
@@ -289,7 +294,8 @@ class ComponentLibrary extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(components[index]),
-          onTap: () => onComponentSelected(components[index], const Offset(100, 100)),
+          onTap: () =>
+              onComponentSelected(components[index], const Offset(100, 100)),
         );
       },
     );
