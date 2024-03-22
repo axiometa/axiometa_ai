@@ -198,27 +198,34 @@ void loop() {
                 child: CustomPaint(
                   painter: ConnectionPainter(componentsInWorkspace),
                   child: Stack(
-                    children: componentsInWorkspace.map((component) {
-                      return Positioned(
-                        left: component.position.dx,
-                        top: component.position.dy,
-                        child: Draggable<ComponentData>(
-                          data: component,
-                          feedback: Material(
-                            elevation: 4.0,
-                            child: Image.asset(component.imagePath,
-                                width: 150, height: 150), // Adjust size as needed
-                          ),
-                          onDragEnd: (details) =>
-                              onComponentDropped(component, details.offset),
-                          child: GestureDetector(
-                            onTap: () => onComponentTap(component),
-                            child: Image.asset(component.imagePath,
-                                width: 120, height: 120), // Adjust size as needed
-                          ),
-                        ),
-                      );
-                    }).toList(),
+  children: componentsInWorkspace.map((component) {
+    return Positioned(
+      left: component.position.dx,
+      top: component.position.dy,
+      child: Draggable<ComponentData>(
+        data: component,
+        feedback: Material(
+          elevation: 4.0,
+          child: Image.asset(component.imagePath, width: 150, height: 150), // Adjust size as needed
+        ),
+        onDragEnd: (details) => onComponentDropped(component, details.offset),
+        child: GestureDetector(
+          onTap: () => onComponentTap(component),
+          child: Stack(
+            children: [
+              Image.asset(component.imagePath, width: 120, height: 120), // Base Image
+              if (selectedComponent == component) // Conditionally add a blue overlay
+                Container(
+                  width: 120,
+                  height: 120,
+                  color: Colors.blue.withOpacity(0.5),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }).toList(),
                   ),
                 ),
               ),
