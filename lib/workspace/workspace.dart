@@ -104,6 +104,28 @@ class workspaceState extends State<workspace> {
     });
   }
 
+  double distanceToSegment(Offset p1, Offset p2, Offset tapPosition) {
+  final double l2 = (p2 - p1).distanceSquared;
+  // If line length is 0, it's a point, so return distance to the point
+  if (l2 == 0) return (tapPosition - p1).distance;
+
+  // Calculate t, the projection scalar of tapPosition on the line p1->p2
+  final double t = ((tapPosition - p1).dx * (p2 - p1).dx + (tapPosition - p1).dy * (p2 - p1).dy) / l2;
+
+  // Determine the closest point on the segment to the tapPosition
+  Offset projection;
+  if (t < 0) {
+    projection = p1; // Before p1 on the line
+  } else if (t > 1) {
+    projection = p2; // Past p2 on the line
+  } else {
+    projection = p1 + Offset((p2 - p1).dx * t, (p2 - p1).dy * t); // Projection falls on the segment
+  }
+
+  // Return the distance from tapPosition to the closest point on the segment
+  return (tapPosition - projection).distance;
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,48 +184,89 @@ class workspaceState extends State<workspace> {
             ),
           ),
           Expanded(
-            flex: 2,
-            child: GestureDetector(
-              onTap: () => setState(() => selectedComponent = null),
-              child: Container(
-                key: workspaceKey,
-                color: Colors.white,
-                child: CustomPaint(
-                  painter: ConnectionPainter(componentsInWorkspace),
+  flex: 2,
+  child: GestureDetector(
+    onTapUp: (TapUpDetails details) {
+      final RenderBox renderBox = workspaceKey.currentContext!.findRenderObject() as RenderBox;
+      final Offset localPosition = renderBox.globalToLocal(details.globalPosition);
+      
+      bool hitLine = false;
+      for (var component in componentsInWorkspace) {
+        for (var connection in component.connections) {
+          final Offset startPoint = component.position + Offset(100 / 2, 100 / 2);
+          final Offset endPoint = connection.position + Offset(100 / 2, 100 / 2);
+          
+          if (distanceToSegment(startPoint, endPoint, localPosition) < 5) {
+            // If a line is hit, handle the logic for line tap
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Connection Info'),
+                  content: Text('Tapped on wire connecting ${component.name} and ${connection.name}.'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+            hitLine = true;
+            break; // Stop checking after a hit is found
+          }
+        }
+        if (hitLine) break;
+      }
+      
+      if (!hitLine) {
+        // If no line was hit, handle the tap as a workspace tap
+        setState(() => selectedComponent = null);
+      }
+    },
+    child: Container(
+      key: workspaceKey,
+      color: Colors.white,
+      child: CustomPaint(
+        painter: ConnectionPainter(componentsInWorkspace),
+        child: Stack(
+          children: componentsInWorkspace.map((component) {
+            return Positioned(
+              left: component.position.dx,
+              top: component.position.dy,
+              child: Draggable<ComponentData>(
+                data: component,
+                feedback: Material(
+                  elevation: 4.0,
+                  child: Image.asset(component.imagePath, width: 100, height: 100), // Adjust size as needed
+                ),
+                onDragEnd: (details) => onComponentDropped(component, details.offset),
+                child: GestureDetector(
+                  onTap: () => onComponentTap(component),
                   child: Stack(
-                    children: componentsInWorkspace.map((component) {
-                      return Positioned(
-                        left: component.position.dx,
-                        top: component.position.dy,
-                        child: Draggable<ComponentData>(
-                          data: component,
-                          feedback: Material(
-                            elevation: 4.0,
-                            child: Image.asset(component.imagePath, width: 100, height: 100), // Adjust size as needed
-                          ),
-                          onDragEnd: (details) => onComponentDropped(component, details.offset),
-                          child: GestureDetector(
-                            onTap: () => onComponentTap(component),
-                            child: Stack(
-                              children: [
-                                Image.asset(component.imagePath, width: 100, height: 100), // Base Image
-                                if (selectedComponent == component) // Conditional blue overlay
-                                  Container(
-                                    width: 100,
-                                    height: 100,
-                                    color: Colors.blue.withOpacity(0.8),
-                                  ),
-                              ],
-                            ),
-                          ),
+                    children: [
+                      Image.asset(component.imagePath, width: 100, height: 100), // Base Image
+                      if (selectedComponent == component) // Conditional blue overlay
+                        Container(
+                          width: 100,
+                          height: 100,
+                          color: Colors.blue.withOpacity(0.8),
                         ),
-                      );
-                    }).toList(),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          }).toList(),
+        ),
+      ),
+    ),
+  ),
+),
+
           Expanded(
             flex: 1,
             child: Container(
