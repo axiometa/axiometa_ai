@@ -27,7 +27,17 @@ void showProgrammingDialog(BuildContext context, ComponentData component, Functi
                       // Update preview code on text change
                       if (value.contains("DHT11")) {
                         setState(() {
-                          previewCode = getGeneratedCode(); // This function should ideally use the input to generate code dynamically
+                          previewCode = getGeneratedCode_DHT11(); // This function should ideally use the input to generate code dynamically
+                        });
+                      }
+                      if (value.contains("BMP180")) {
+                        setState(() {
+                          previewCode = getGeneratedCode_BMP180(); // This function should ideally use the input to generate code dynamically
+                        });
+                      }
+                      if (value.contains("BMP180") && value.contains("DHT11")) {
+                        setState(() {
+                          previewCode = getGeneratedCode_DHT11_BMP180(); // This function should ideally use the input to generate code dynamically
                         });
                       }
                     },

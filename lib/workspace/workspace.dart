@@ -179,19 +179,19 @@ class workspaceState extends State<workspace> {
                           data: component,
                           feedback: Material(
                             elevation: 4.0,
-                            child: Image.asset(component.imagePath, width: 150, height: 150), // Adjust size as needed
+                            child: Image.asset(component.imagePath, width: 100, height: 100), // Adjust size as needed
                           ),
                           onDragEnd: (details) => onComponentDropped(component, details.offset),
                           child: GestureDetector(
                             onTap: () => onComponentTap(component),
                             child: Stack(
                               children: [
-                                Image.asset(component.imagePath, width: 120, height: 120), // Base Image
+                                Image.asset(component.imagePath, width: 100, height: 100), // Base Image
                                 if (selectedComponent == component) // Conditional blue overlay
                                   Container(
-                                    width: 120,
-                                    height: 120,
-                                    color: Colors.blue.withOpacity(0.5),
+                                    width: 100,
+                                    height: 100,
+                                    color: Colors.blue.withOpacity(0.8),
                                   ),
                               ],
                             ),
