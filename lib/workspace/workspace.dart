@@ -7,14 +7,14 @@ import '/connections/connection_painter.dart';
 import '/components/component_data.dart';
 import '/programming/programming.dart';
 
-class IDELikeInterface extends StatefulWidget {
-  const IDELikeInterface({super.key});
+class workspace extends StatefulWidget {
+  const workspace({super.key});
 
   @override
-  IDELikeInterfaceState createState() => IDELikeInterfaceState();
+  workspaceState createState() => workspaceState();
 }
 
-class IDELikeInterfaceState extends State<IDELikeInterface> {
+class workspaceState extends State<workspace> {
   List<ComponentData> componentsInWorkspace = [];
   final GlobalKey workspaceKey = GlobalKey();
   ComponentData? selectedComponent;
