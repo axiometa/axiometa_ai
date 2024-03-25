@@ -34,25 +34,43 @@ class ModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment:
-          MainAxisAlignment.center, // Center the buttons horizontally
       children: [
-        _buildCustomButton(
-          context: context,
-          onTap: () => selectMode(context, 1),
-          logoColor: Color.fromARGB(255, 16, 132, 226),
-          iconData: Icons.computer, // Example icon for Software Development
-          text: 'Software - Development Mode',
+        Padding(
+          padding:
+              const EdgeInsets.only(bottom: 20), // Adjust the space as needed
+          child: Text(
+            "Welcome to Axiometa AI",
+            style: TextStyle(
+              fontFamily: 'Pirulen', // Use your custom font
+              fontSize: 32, // Adjust the font size as needed
+              fontWeight: FontWeight.bold, // Adjust the weight as needed
+            ),
+          ),
         ),
-        SizedBox(width: 8), // Correct horizontal space between buttons
-        _buildCustomButton(
-          context: context,
-          onTap: () => selectMode(context, 2),
-          logoColor: Color.fromARGB(255, 153, 39, 39),
-          iconData: Icons.memory, // Example icon for Electronics Development
-          text: 'Electronics - Development Mode',
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Center the buttons horizontally
+          children: [
+            _buildCustomButton(
+              context: context,
+              onTap: () => selectMode(context, 1),
+              logoColor: Color.fromARGB(255, 16, 132, 226),
+              iconData: Icons.computer, // Example icon for Software Development
+              text: 'Software - Development Mode',
+            ),
+            SizedBox(width: 8), // Correct horizontal space between buttons
+            _buildCustomButton(
+              context: context,
+              onTap: () => selectMode(context, 2),
+              logoColor: Color.fromARGB(255, 153, 39, 39),
+              iconData:
+                  Icons.memory, // Example icon for Electronics Development
+              text: 'Electronics - Development Mode',
+            ),
+          ],
         ),
       ],
     );
