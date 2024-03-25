@@ -7,21 +7,46 @@ import '/connections/connection_painter.dart';
 import '/components/component_data.dart';
 import '/programming/programming.dart';
 
-class workspace extends StatefulWidget {
-  const workspace({super.key});
+class workspace2 extends StatefulWidget {
+  const workspace2({super.key});
 
   @override
   workspaceState createState() => workspaceState();
 }
 
-class workspaceState extends State<workspace> {
+class workspaceState extends State<workspace2> {
   List<ComponentData> componentsInWorkspace = [];
   final GlobalKey workspaceKey = GlobalKey();
   ComponentData? selectedComponent;
   bool isDeleteMode = false;
   bool isProgrammingMode = false; // Flag for Programming Mode
   String generatedCode = '// Your code will appear here';
-  
+
+  @override
+  void initState() {
+    super.initState();
+    _addDefaultComponents();
+    _connectAllComponents();
+  }
+
+  void _addDefaultComponents() {
+    // Add default components to the workspace here.
+    // Example:
+    addComponentToWorkspace("Arduino Nano", Offset(150, 400));
+    addComponentToWorkspace("Sensor DHT11", Offset(400, 100));
+    // Add more components as needed
+  }
+
+  void _connectAllComponents() {
+  // For each component, connect it to all other components
+  for (var component in componentsInWorkspace) {
+    for (var otherComponent in componentsInWorkspace) {
+      if (component != otherComponent && !component.connections.contains(otherComponent)) {
+        component.connections.add(otherComponent);
+      }
+    }
+  }
+}
 
   addComponentToWorkspace(String componentName, Offset position) {
     setState(() {
