@@ -57,7 +57,7 @@ class ModeSelector extends StatelessWidget {
             _buildCustomButton(
               context: context,
               onTap: () => selectMode(context, 1),
-              logoColor: Color.fromARGB(255, 16, 132, 226),
+              logoColor: Color.fromARGB(255, 34, 35, 36),
               iconData: Icons.computer, // Example icon for Software Development
               text: 'Software - Development Mode',
             ),
@@ -65,7 +65,7 @@ class ModeSelector extends StatelessWidget {
             _buildCustomButton(
               context: context,
               onTap: () => selectMode(context, 2),
-              logoColor: Color.fromARGB(255, 153, 39, 39),
+              logoColor: Color.fromARGB(255, 49, 45, 45),
               iconData:
                   Icons.memory, // Example icon for Electronics Development
               text: 'Electronics - Development Mode',
@@ -103,7 +103,7 @@ class ModeSelector extends StatelessWidget {
                     BorderRadius.circular(16), // This gives a square look
               ),
               child: Icon(iconData,
-                  color: Color.fromARGB(255, 4, 0, 0),
+                  color: Color.fromARGB(255, 249, 249, 249),
                   size: 40), // Use the passed icon data here
             ),
             SizedBox(width: 16), // Space between the icon and the text

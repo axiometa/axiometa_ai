@@ -38,15 +38,16 @@ class workspaceState extends State<workspace2> {
   }
 
   void _connectAllComponents() {
-  // For each component, connect it to all other components
-  for (var component in componentsInWorkspace) {
-    for (var otherComponent in componentsInWorkspace) {
-      if (component != otherComponent && !component.connections.contains(otherComponent)) {
-        component.connections.add(otherComponent);
+    // For each component, connect it to all other components
+    for (var component in componentsInWorkspace) {
+      for (var otherComponent in componentsInWorkspace) {
+        if (component != otherComponent &&
+            !component.connections.contains(otherComponent)) {
+          component.connections.add(otherComponent);
+        }
       }
     }
   }
-}
 
   addComponentToWorkspace(String componentName, Offset position) {
     setState(() {
@@ -59,6 +60,25 @@ class workspaceState extends State<workspace2> {
         ),
       );
     });
+  }
+
+  void electronicsPrompt() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // This dialog can be replaced or updated to handle more complex input
+          return AlertDialog(
+            title: const Text("Choose what to build"),
+            content: TextField(
+              onSubmitted: (value) {
+                if (value.contains("DHT11")) {
+                  _addDefaultComponents();
+                  _connectAllComponents();
+                }
+              },
+            ),
+          );
+        });
   }
 
   void onComponentTap(ComponentData component) {
@@ -163,9 +183,15 @@ class workspaceState extends State<workspace2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AXIOMETA',
-            style: TextStyle(color: Colors.white, fontFamily: 'Pirulen')),
+        title: const Text(
+          'AXIOMETA',
+          style: TextStyle(color: Colors.white, fontFamily: 'Pirulen'),
+        ),
         backgroundColor: Color.fromARGB(255, 5, 19, 12),
+        iconTheme: IconThemeData(
+          color: Colors
+              .white, // This will apply to the back button and other icon buttons in the AppBar
+        ),
         actions: [
           if (!isProgrammingMode)
             IconButton(
@@ -174,7 +200,6 @@ class workspaceState extends State<workspace2> {
               tooltip: isDeleteMode
                   ? 'Switch to Edit Mode'
                   : 'Switch to Delete Mode',
-              color: Colors.white,
             ),
           IconButton(
             icon: Icon(isProgrammingMode ? Icons.code_off : Icons.code),
@@ -187,7 +212,22 @@ class workspaceState extends State<workspace2> {
             tooltip: isProgrammingMode
                 ? 'Exit Programming Mode'
                 : 'Enter Programming Mode',
-            color: Colors.white,
+          ),
+          // New settings button
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              electronicsPrompt();
+              // Your settings button event
+            },
+            tooltip: 'Settings',
+          ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              // Your settings button event
+            },
+            tooltip: 'Settings',
           ),
         ],
       ),
@@ -246,10 +286,12 @@ class workspaceState extends State<workspace2> {
                     if (distanceToSegment(startPoint, endPoint, localPosition) <
                         5) {
                       String diagramText;
-                      if (component.name == "Sensor DHT11" || connection.name == "Sensor DHT11") {
+                      if (component.name == "Sensor DHT11" ||
+                          connection.name == "Sensor DHT11") {
                         diagramText =
                             '[DHT11]     [Arduino Nano]\n VCC    --> 5V\n Data   --> D2\n GND    --> GND\n';
-                      } else if (component.name == "Sensor BMP180" || component.name == "Sensor BMP180") {
+                      } else if (component.name == "Sensor BMP180" ||
+                          component.name == "Sensor BMP180") {
                         diagramText =
                             '[BMP180]    [Arduino Nano]\n VCC    --> 3.3V\n SDA    --> A4\n SCL    --> A5\n GND    --> GND\n';
                       } else {

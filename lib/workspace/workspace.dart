@@ -21,7 +21,6 @@ class workspaceState extends State<workspace> {
   bool isDeleteMode = false;
   bool isProgrammingMode = false; // Flag for Programming Mode
   String generatedCode = '// Your code will appear here';
-  
 
   addComponentToWorkspace(String componentName, Offset position) {
     setState(() {
@@ -138,9 +137,15 @@ class workspaceState extends State<workspace> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AXIOMETA',
-            style: TextStyle(color: Colors.white, fontFamily: 'Pirulen')),
+        title: const Text(
+          'AXIOMETA',
+          style: TextStyle(color: Colors.white, fontFamily: 'Pirulen'),
+        ),
         backgroundColor: Color.fromARGB(255, 5, 19, 12),
+        iconTheme: IconThemeData(
+          color: Colors
+              .white, // This will apply to the back button and other icon buttons in the AppBar
+        ),
         actions: [
           if (!isProgrammingMode)
             IconButton(
@@ -149,7 +154,6 @@ class workspaceState extends State<workspace> {
               tooltip: isDeleteMode
                   ? 'Switch to Edit Mode'
                   : 'Switch to Delete Mode',
-              color: Colors.white,
             ),
           IconButton(
             icon: Icon(isProgrammingMode ? Icons.code_off : Icons.code),
@@ -162,7 +166,14 @@ class workspaceState extends State<workspace> {
             tooltip: isProgrammingMode
                 ? 'Exit Programming Mode'
                 : 'Enter Programming Mode',
-            color: Colors.white,
+          ),
+          // New settings button
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              // Your settings button event
+            },
+            tooltip: 'Settings',
           ),
         ],
       ),
@@ -221,10 +232,12 @@ class workspaceState extends State<workspace> {
                     if (distanceToSegment(startPoint, endPoint, localPosition) <
                         5) {
                       String diagramText;
-                      if (component.name == "Sensor DHT11" || connection.name == "Sensor DHT11") {
+                      if (component.name == "Sensor DHT11" ||
+                          connection.name == "Sensor DHT11") {
                         diagramText =
                             '[DHT11]     [Arduino Nano]\n VCC    --> 5V\n Data   --> D2\n GND    --> GND\n';
-                      } else if (component.name == "Sensor BMP180" || component.name == "Sensor BMP180") {
+                      } else if (component.name == "Sensor BMP180" ||
+                          component.name == "Sensor BMP180") {
                         diagramText =
                             '[BMP180]    [Arduino Nano]\n VCC    --> 3.3V\n SDA    --> A4\n SCL    --> A5\n GND    --> GND\n';
                       } else {
