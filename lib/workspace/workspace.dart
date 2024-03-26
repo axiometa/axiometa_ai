@@ -6,6 +6,7 @@ import '/components/component_library.dart';
 import '/connections/connection_painter.dart';
 import '/components/component_data.dart';
 import '/programming/programming.dart';
+import '/sensor_connections/sensor_connection.dart';
 
 class workspace extends StatefulWidget {
   const workspace({super.key});
@@ -234,12 +235,10 @@ class workspaceState extends State<workspace> {
                       String diagramText;
                       if (component.name == "Sensor DHT11" ||
                           connection.name == "Sensor DHT11") {
-                        diagramText =
-                            '[DHT11]     [Arduino Nano]\n VCC    --> 5V\n Data   --> D2\n GND    --> GND\n';
+                        diagramText = diagramText_DHT11;
                       } else if (component.name == "Sensor BMP180" ||
                           component.name == "Sensor BMP180") {
-                        diagramText =
-                            '[BMP180]    [Arduino Nano]\n VCC    --> 3.3V\n SDA    --> A4\n SCL    --> A5\n GND    --> GND\n';
+                        diagramText = diagramText_BMP180;
                       } else {
                         diagramText = "Unknown component";
                       }
