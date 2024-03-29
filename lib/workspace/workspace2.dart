@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import services for clipboard access
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:async'; // For timer functions
 
 import '/components/component_library.dart';
@@ -33,7 +34,7 @@ class workspaceState extends State<workspace2> {
   void _addDefaultComponents() {
     // Add default components to the workspace here.
     // Example:
-    addComponentToWorkspace("Arduino Nano", Offset(150, 400));
+    addComponentToWorkspace("Axiometa Sparklet", Offset(150, 400));
     addComponentToWorkspace("Sensor DHT11", Offset(400, 100));
     // Add more components as needed
   }
@@ -84,7 +85,7 @@ class workspaceState extends State<workspace2> {
 
   void onComponentTap(ComponentData component) {
     if (isProgrammingMode) {
-      if (component.name == "Arduino Nano") {
+      if (component.name == "Axiometa Sparklet") {
         showProgrammingDialog(context, component, updateGeneratedCode);
       }
     } else if (!isDeleteMode) {
@@ -125,6 +126,44 @@ class workspaceState extends State<workspace2> {
     });
   }
 
+  void openStore(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Bellow are the required parts for your prototype"),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              // Adjust the image paths as needed
+              Image.asset('assets/images/sensor_icons/Axiometa Sparklet.png',
+                  width: 100),
+              Image.asset('assets/images/sensor_icons/Sensor DHT11.png',
+                  width: 100),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Purchase online"),
+              onPressed: () async {
+                const url = 'https://axiometa.ai/product/dht11-temperature-and-humidity-sensor/';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+            ),
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void showUploadDialog() {
     showDialog(
       context: context,
@@ -138,7 +177,7 @@ class workspaceState extends State<workspace2> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Uploading to Arduino Nano (COM3)'),
+                Text('Uploading to Axiometa Sparklet (COM3)'),
                 SizedBox(height: 20),
                 LinearProgressIndicator(),
               ],
@@ -216,18 +255,23 @@ class workspaceState extends State<workspace2> {
           ),
           // New settings button
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.build),
             onPressed: () {
               electronicsPrompt();
               // Your settings button event
             },
-            tooltip: 'Settings',
+            tooltip: 'Build',
+          ),
+          IconButton(
+            icon: Icon(Icons.store),
+            onPressed: () {
+              openStore(context);
+            },
+            tooltip: 'Store',
           ),
           IconButton(
             icon: Icon(Icons.settings),
-            onPressed: () {
-              // Your settings button event
-            },
+            onPressed: () {},
             tooltip: 'Settings',
           ),
         ],

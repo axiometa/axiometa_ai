@@ -6,7 +6,7 @@ class ComponentLibrary extends StatelessWidget {
   ComponentLibrary({super.key, required this.onComponentSelected});
 
   final List<String> components = [
-    'Arduino Nano',
+    'Axiometa Sparklet',
     'Sensor DHT11',
     'Sensor BMP180',
     // Add more components as needed
