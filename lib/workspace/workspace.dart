@@ -23,7 +23,16 @@ class workspaceState extends State<workspace> {
   ComponentData? selectedComponent;
   bool isDeleteMode = false;
   bool isProgrammingMode = false; // Flag for Programming Mode
-  String generatedCode = '// Your code will appear here';
+  String generatedCode = 'Code will appear here';
+  String? _selectedOption; // This will hold the currently selected dropdown option.
+  List<String> _options = []; // This will hold the dropdown options.
+
+ @override
+  void initState() {
+    super.initState();
+    _options = ['Basic Arduino', 'Bare Arduino', 'STM32', 'Other...'];
+    _selectedOption = _options.first;
+  }
 
   addComponentToWorkspace(String componentName, Offset position) {
     setState(() {
@@ -81,43 +90,44 @@ class workspaceState extends State<workspace> {
     });
   }
 
-
-void openStore(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Bellow are the required parts for your prototype"),
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            // Adjust the image paths as needed
-            Image.asset('assets/images/sensor_icons/Axiometa Sparklet.png', width: 100),
-            Image.asset('assets/images/sensor_icons/Sensor DHT11.png', width: 100),
+  void openStore(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Bellow are the required parts for your prototype"),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              // Adjust the image paths as needed
+              Image.asset('assets/images/sensor_icons/Axiometa Sparklet.png',
+                  width: 100),
+              Image.asset('assets/images/sensor_icons/Sensor DHT11.png',
+                  width: 100),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Purchase online"),
+              onPressed: () async {
+                const url =
+                    'https://axiometa.ai/product/dht11-temperature-and-humidity-sensor/';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+            ),
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text("Purchase online"),
-            onPressed: () async {
-              const url = 'https://axiometa.ai/product/dht11-temperature-and-humidity-sensor/';
-              if (await canLaunch(url)) {
-                await launch(url);
-              } else {
-                throw 'Could not launch $url';
-              }
-            },
-          ),
-          TextButton(
-            child: const Text("Cancel"),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 
   void showUploadDialog() {
     showDialog(
@@ -233,13 +243,60 @@ void openStore(BuildContext context) {
               color: Colors.grey[200],
               child: Column(
                 children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Text(generatedCode,
-                          style: const TextStyle(
-                              fontFamily: 'Monospace', fontSize: 16)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    // DropdownButton widget here
+                    child: DropdownButton<String>(
+                      value: _selectedOption,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedOption = newValue;
+                        });
+                      },
+                      items: _options
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
+                  Expanded(
+                    child: Scrollbar(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          color: Colors.grey[100], // IDE-like background color
+                          child: TextField(
+                            controller:
+                                TextEditingController(text: generatedCode),
+                            style: const TextStyle(
+                              fontFamily:
+                                  'Monospace', // Use a monospace font for code-like appearance
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 0, 0,
+                                  0), // Text color that contrasts with the background
+                            ),
+                            maxLines: null, // Allow for any number of lines
+                            decoration: InputDecoration(
+                              border:
+                                  InputBorder.none, // Hide the TextField border
+                              contentPadding: EdgeInsets.zero, // Remove padding
+                            ),
+                            onChanged: (newCode) {
+                              updateGeneratedCode(
+                                  newCode); // Update the generatedCode variable when text changes
+                            },
+                            enableInteractiveSelection:
+                                true, // Allows text selection
+                            cursorColor: Colors.black, // Cursor color
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   ElevatedButton(
                     onPressed: () {
                       showUploadDialog(); // Simulate upload functionality

@@ -22,13 +22,18 @@ class workspaceState extends State<workspace2> {
   ComponentData? selectedComponent;
   bool isDeleteMode = false;
   bool isProgrammingMode = false; // Flag for Programming Mode
-  String generatedCode = '// Your code will appear here';
+  String generatedCode = 'Code will appear here';
+  String?
+      _selectedOption; // This will hold the currently selected dropdown option.
+  List<String> _options = []; // This will hold the dropdown options.
 
   @override
   void initState() {
     super.initState();
     _addDefaultComponents();
     _connectAllComponents();
+    _options = ['Basic Arduino', 'Bare Arduino', 'STM32', 'Other...'];
+    _selectedOption = _options.first;
   }
 
   void _addDefaultComponents() {
@@ -146,7 +151,8 @@ class workspaceState extends State<workspace2> {
             TextButton(
               child: const Text("Purchase online"),
               onPressed: () async {
-                const url = 'https://axiometa.ai/product/dht11-temperature-and-humidity-sensor/';
+                const url =
+                    'https://axiometa.ai/product/dht11-temperature-and-humidity-sensor/';
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {
@@ -284,11 +290,57 @@ class workspaceState extends State<workspace2> {
               color: Colors.grey[200],
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    // DropdownButton widget here
+                    child: DropdownButton<String>(
+                      value: _selectedOption,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedOption = newValue;
+                        });
+                      },
+                      items: _options
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Text(generatedCode,
-                          style: const TextStyle(
-                              fontFamily: 'Monospace', fontSize: 16)),
+                    child: Scrollbar(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          color: Colors.grey[100], // IDE-like background color
+                          child: TextField(
+                            controller:
+                                TextEditingController(text: generatedCode),
+                            style: const TextStyle(
+                              fontFamily:
+                                  'Monospace', // Use a monospace font for code-like appearance
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 0, 0,
+                                  0), // Text color that contrasts with the background
+                            ),
+                            maxLines: null, // Allow for any number of lines
+                            decoration: InputDecoration(
+                              border:
+                                  InputBorder.none, // Hide the TextField border
+                              contentPadding: EdgeInsets.zero, // Remove padding
+                            ),
+                            onChanged: (newCode) {
+                              updateGeneratedCode(
+                                  newCode); // Update the generatedCode variable when text changes
+                            },
+                            enableInteractiveSelection:
+                                true, // Allows text selection
+                            cursorColor: Colors.black, // Cursor color
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   ElevatedButton(

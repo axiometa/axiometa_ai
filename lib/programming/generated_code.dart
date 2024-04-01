@@ -1,5 +1,20 @@
 // lib/generated_code_template.dart
 
+String defaultCode() {
+  return """
+
+void setup() {
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
+""";
+}
+
 String getGeneratedCode_BMP180() {
   return """
 #include <Wire.h>
